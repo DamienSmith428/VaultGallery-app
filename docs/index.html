@@ -787,7 +787,7 @@ async function loadConfig() {
   // Badge + hero
   document.getElementById('hero-version-badge').textContent = `v${cfg.app.latestVersion} Now Available`;
   document.getElementById('hero-eyebrow').textContent = cfg.app.eyebrow;
-  document.getElementById('hero-tagline').textContent = cfg.app.tagline.split(' ').pop() + '.'; // last word
+  document.getElementById('hero-tagline').textContent = cfg.app.tagline;
   document.getElementById('hero-sub').innerHTML = cfg.app.description
     .replace('full metadata', '<strong>full metadata</strong>')
     .replace('album art', '<strong>album art</strong>')
