@@ -4,7 +4,7 @@
     "packageName": "com.vaultgallery",
     "tagline": "Your Gallery, Locked Down",
     "description": "Vault Gallery is the most secure way to store your private photos and videos on Android. Every file is encrypted with AES-256 \u2014 the same standard used by banks and governments \u2014 and your encryption key never leaves your device's secure hardware. Import media directly from your camera roll, organize into albums, and browse your collection with a sleek modern gallery interface. Protected by PIN and biometric authentication, your vault locks automatically when you leave the app. Nobody sees what's inside except you.\nFeatures:\n\nMilitary-grade AES-256-GCM encryption\nFingerprint and face unlock support\nCompletely hidden from your system gallery\nAlbum organization with full search\nRecycle bin with auto-delete options\nFavorites collection\nConfigurable auto-lock and storage quota\nNo ads. No cloud. No compromise.",
-    "latestVersion": "1.1",
+    "latestVersion": "1.0",
     "eyebrow": "Private Media Vault",
     "icon": "https://raw.githubusercontent.com/DamienSmith428/VaultGallery-app/master/app/src/main/res/drawable/app_icon_main.png"
   },
@@ -62,8 +62,7 @@
   ],
   "changelog": {
     "versions": [
-      "v1.0.json",
-      "v1.1.json"
+      "v1.0.json"
     ]
   }
 }
