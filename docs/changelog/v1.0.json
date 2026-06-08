@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "date": "06/08/2026",
+  "tag": "Initial Release",
+  "tagStyle": "initial",
+  "githubReleaseUrl": "https://github.com/DamienSmith428/VaultGallery-app/releases/tag/VaultGallery-V1.0",
+  "changes": [
+    {
+      "type": "added",
+      "items": [
+        "Initial release of Vault Gallery",
+        "AES-256-GCM encryption for all stored photos and videos",
+        "Encryption keys stored in Android hardware-backed Keystore; never exposed to the app/device storage",
+        "PIN authentication with SHA-256 salted hashing",
+        "Biometric unlock support — fingerprint and face recognition",
+        "Automatic vault locking when app is backgrounded",
+        "Configurable auto-lock timeout — Immediately, 30 seconds, 1, 5, or 15 minutes",
+        "Import photos and videos directly from your device gallery",
+        "Original files removed from system gallery after import",
+        "Encrypted thumbnail generation for smooth private gallery browsing",
+        "Full resolution in-memory decryption — no plaintext ever written to disk",
+        "Album creation and organization",
+        "Favorites collection",
+        "Recycle bin with soft delete and one-tap restore",
+        "Configurable recycle bin auto-delete — 7, 30, or 60 days",
+        "Full text search by filename, album, and tags",
+        "Swipe between photos and videos in the media viewer",
+        "Pinch to zoom and pan on photos",
+        "Video playback with full player controls",
+        "Configurable vault storage quota up to 15GB",
+        "Real-time vault storage usage display on home screen",
+        "Dark cyberpunk UI with Material 3 design",
+        "Dynamic color support on Android 12 and newer",
+        "Screenshot and screen recording prevention",
+        "Brute force PIN protection with progressive lockout",
+        "Zero ads",
+        "Zero cloud connectivity",
+        "Zero data collection",
+        "Supports Android 8.0 through Android 14"
+      ]
+    }
+  ]
+}
