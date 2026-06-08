@@ -1,84 +1,91 @@
-<div align="center">
+# 🔐 Vault Gallery
 
-<img src="icon/app_icon_main.png" width="96" height="96" style="border-radius: 22px;" alt="VaultGallery icon"/>
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.0-blue.svg)](https://kotlinlang.org)
+[![Compose](https://img.shields.io/badge/Jetpack_Compose-1.7-green.svg)](https://developer.android.com/jetpack/compose)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Android_8.0+-lightgrey.svg)](https://developer.android.com)
 
-# VaultGallery
-
-**VaultGallery**
-
-[![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://DamienSmith428.github.io/VaultGallery-app/)
-[![Version](https://img.shields.io/badge/Latest-v1.0-00FFE0?style=for-the-badge&logo=github&logoColor=white)](https://github.com/DamienSmith428/VaultGallery-app/releases/latest)
-[![License](https://img.shields.io/badge/License-MIT-FF00C8?style=for-the-badge)](LICENSE)
-[![Min SDK](https://img.shields.io/badge/Min_SDK-26-FFE600?style=for-the-badge&logo=android&logoColor=white)](https://DamienSmith428.github.io/VaultGallery-app/)
-[![SideStack](https://img.shields.io/badge/Distributed_via-SideStack-00FF88?style=for-the-badge)](https://DamienSmith428.github.io/SideStack-web/)
-
-[**→ View App Page**](https://DamienSmith428.github.io/VaultGallery-app/) · [**↓ Download**](https://github.com/DamienSmith428/VaultGallery-app/releases/latest) · [**Changelog**](https://DamienSmith428.github.io/VaultGallery-app/changelog.html) · [**Privacy Policy**](https://DamienSmith428.github.io/VaultGallery-app/privacy.html)
-
-</div>
+**Vault Gallery** is a high-security, privacy-focused media storage application for Android. It allows you to protect your sensitive photos and videos using industry-standard AES-256 encryption, ensuring that your private data stays private—even if your device is compromised.
 
 ---
 
-## About
+## 🚀 Features
 
-Vault Gallery is the most secure way to store your private photos and videos on Android. Every file is encrypted with AES-256 — the same standard used by banks and governments — and your encryption key never leaves your device's secure hardware. Import media directly from your camera roll, organize into albums, and browse your collection with a sleek modern gallery interface. Protected by PIN and biometric authentication, your vault locks automatically when you leave the app. Nobody sees what's inside except you.
-Features:
-
-Military-grade AES-256-GCM encryption
-Fingerprint and face unlock support
-Completely hidden from your system gallery
-Album organization with full search
-Recycle bin with auto-delete options
-Favorites collection
-Configurable auto-lock and storage quota
-No ads. No cloud. No compromise.
+- **End-to-End Encryption:** Every file is encrypted using AES-256-GCM before it ever touches your storage.
+- **Biometric Security:** Unlock your vault seamlessly with Fingerprint or Face ID integration.
+- **Encrypted Thumbnails:** High-performance preview grid using a custom Coil fetcher that decrypts thumbnails on-the-fly entirely in memory.
+- **Storage Quotas & Monitoring:** Set hard limits on how much space your vault can consume and track usage with real-time progress indicators.
+- **Auto-Lock:** Customizable timers (Immediate to 15 minutes) that lock the vault the moment the app moves to the background.
+- **Zero-Knowledge Viewer:** View full-resolution images and stream videos directly from their encrypted state without ever writing plaintext files to disk.
+- **Recycle Bin:** Safeguard against accidental deletions with an automated purge system (30, 60, or 90 days).
+- **Material 3 UI:** A modern, beautiful interface featuring Dynamic Color (Material You) support and a sleek "Cyberpunk" dark mode.
+- **Smart Search:** Quickly find media by filename or tags with a debounced, indexed search engine.
 
 ---
 
-## Download
+## 🛡️ Security Architecture
 
-Head to the [**latest release**](https://github.com/DamienSmith428/VaultGallery-app/releases/latest) and grab the APK for your device architecture.
+Vault Gallery is designed with a "Privacy First" philosophy. Here is how we protect your data:
 
-| Architecture | Who it's for |
-|---|---|
-| `Universal` | Works on all supported Android devices — **recommended** |
+### 1. The Encryption Standard
+We use **AES-256** in **Galois/Counter Mode (GCM)**. GCM provides not just confidentiality (encryption) but also authenticity (integrity), ensuring that your files cannot be tampered with while stored.
 
-> **Not sure which to pick?** Grab `arm64-v8a` — it covers most Android phones from 2016 and newer.
+### 2. Hardware-Backed Key Management
+Encryption keys are never stored in your app's data. They are generated and protected by the **Android Keystore System**. On modern devices, these keys are stored in a **TEE (Trusted Execution Environment)** or **StrongBox** (dedicated hardware security module), making them virtually impossible to extract.
 
----
-
-## Installation
-
-1. Download the APK for your architecture above
-2. Open the APK on your device
-3. Allow installation from unknown sources if prompted
-4. Install and enjoy
+### 3. Zero-Knowledge Principle
+- **No Plaintext on Disk:** When you view a photo, it is decrypted directly into an in-memory byte array for display.
+- **Streaming Decryption:** Videos are decrypted through a secure stream directly into the media player.
+- **No Cloud Sync:** Your data never leaves your device. We do not use any cloud providers, meaning you are the only one with access to your files.
 
 ---
 
-## Privacy
+## 🛠️ Technology Stack
 
-VaultGallery collects no data. No analytics, no telemetry, no accounts. Everything stays on your device. [Full privacy policy →](https://DamienSmith428.github.io/VaultGallery-app/privacy.html)
+- **UI:** Jetpack Compose with Material 3
+- **Dependency Injection:** Hilt
+- **Local Database:** Room (Metadata storage)
+- **Image Loading:** Coil (with custom `Fetcher` for encrypted files)
+- **Video Playback:** ExoPlayer / Media3
+- **Concurrency:** Kotlin Coroutines & Flow
+- **Data Management:** DataStore Preferences
+- **Security:** AndroidX Biometric, AndroidX Security Crypto, KeyStore
 
 ---
 
-## Distributed via SideStack
+## 📖 Technical Reference
 
-This app is part of [SideStack](https://DamienSmith428.github.io/SideStack-web/) — an independent Android app store built outside the Play Store ecosystem.
-
----
-
-## 📬 Get This App Listed in the SideStack Store
-
-If you built this app using the SideStack Tool and want it to appear in the SideStack Android store, copy the config URL below and send it to **[@DamienSmith428](https://github.com/DamienSmith428)** — open an issue or reach out directly on GitHub.
-
-```
-https://raw.githubusercontent.com/DamienSmith428/VaultGallery-app/main/docs/config.json
+### Project Structure
+```text
+com.vaultgallery/
+├── data/
+│   ├── security/        # AES-256 Logic, KeyStore, Biometric & Auto-Lock
+│   ├── repository/      # Central data handling
+│   ├── database/        # Room entities and DAOs
+│   └── MediaImporter/   # Secure import/export pipeline
+├── domain/              # Pure Kotlin models
+├── ui/
+│   ├── screens/         # Individual Compose screens
+│   ├── theme/           # Material 3 & Dynamic Color configuration
+│   └── components/      # Reusable UI elements
 ```
 
-Once added, your app will appear automatically in the SideStack store app for all users.
+### Build Instructions
+1. Clone the repository.
+2. Open in **Android Studio Hedgehog** (or newer).
+3. Ensure you have **JDK 17** configured.
+4. Click **Run** to deploy to a device with API 26+.
 
 ---
 
-<div align="center">
-<sub>Built by <a href="https://github.com/DamienSmith428">DamienSmith428</a> · MIT License</sub>
-</div>
+## 🤝 Contribution & Credits
+
+**Developed by:** [DamienSmith428](https://github.com/DamienSmith428)
+
+Contributions are welcome! If you find a bug or have a feature request, please open an issue or submit a pull request.
+
+---
+
+## ⚖️ License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
