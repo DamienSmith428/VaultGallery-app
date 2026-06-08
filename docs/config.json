@@ -3,8 +3,8 @@
     "name": "Vault Gallery",
     "packageName": "com.vaultgallery",
     "tagline": "Your Gallery, Locked Down",
-    "description": "Vault Gallery is the most secure way to store your private photos and videos on Android. Every file is encrypted with AES-256 — the same standard used by banks and governments — and your encryption key never leaves your device's secure hardware. Import media directly from your camera roll, organize into albums, and browse your collection with a sleek modern gallery interface. Protected by PIN and biometric authentication, your vault locks automatically when you leave the app. Nobody sees what's inside except you.\nFeatures:\n\nMilitary-grade AES-256-GCM encryption\nFingerprint and face unlock support\nCompletely hidden from your system gallery\nAlbum organization with full search\nRecycle bin with auto-delete options\nFavorites collection\nConfigurable auto-lock and storage quota\nNo ads. No cloud. No compromise.",
-    "latestVersion": "1.0",
+    "description": "Vault Gallery is the most secure way to store your private photos and videos on Android. Every file is encrypted with AES-256 \u2014 the same standard used by banks and governments \u2014 and your encryption key never leaves your device's secure hardware. Import media directly from your camera roll, organize into albums, and browse your collection with a sleek modern gallery interface. Protected by PIN and biometric authentication, your vault locks automatically when you leave the app. Nobody sees what's inside except you.\nFeatures:\n\nMilitary-grade AES-256-GCM encryption\nFingerprint and face unlock support\nCompletely hidden from your system gallery\nAlbum organization with full search\nRecycle bin with auto-delete options\nFavorites collection\nConfigurable auto-lock and storage quota\nNo ads. No cloud. No compromise.",
+    "latestVersion": "1.1",
     "eyebrow": "Private Media Vault",
     "icon": "https://raw.githubusercontent.com/DamienSmith428/VaultGallery-app/master/app/src/main/res/drawable/app_icon_main.png"
   },
@@ -32,22 +32,22 @@
   ],
   "features": [
     {
-      "icon": "🔐",
+      "icon": "\ud83d\udd10",
       "title": "Military-Grade Encryption",
-      "description": "Every photo and video in your vault is protected with AES-256-GCM encryption — the same standard trusted by banks, governments, and defense agencies worldwide. Your encryption key is generated and stored inside your device's secure hardware and never exposed to anyone, including us."
+      "description": "Every photo and video in your vault is protected with AES-256-GCM encryption \u2014 the same standard trusted by banks, governments, and defense agencies worldwide. Your encryption key is generated and stored inside your device's secure hardware and never exposed to anyone, including us."
     },
     {
-      "icon": "👆",
+      "icon": "\ud83d\udc46",
       "title": "Biometric Authentication",
       "description": "Unlock your vault instantly with your fingerprint or face. Vault Gallery integrates directly with your device's biometric hardware for fast, secure access. Prefer a PIN? That works too. Use both together for maximum security."
     },
     {
-      "icon": "🗂️",
+      "icon": "\ud83d\uddc2\ufe0f",
       "title": "Organized Your Way",
       "description": "Create albums to organize your private collection exactly how you want it. Search by filename, date, or tags. Mark favorites for quick access. Recover mistakes from the recycle bin. Your vault works like a full-featured private gallery, not just a locked folder."
     },
     {
-      "icon": "⚡",
+      "icon": "\u26a1",
       "title": "Buttery Smooth Gallery",
       "description": "Browse your encrypted collection without compromise. Encrypted thumbnails load instantly in a smooth scrolling grid. Swipe between photos with fluid transitions. Pinch to zoom. Play videos with full player controls. Security that actually feels good to use."
     }
@@ -62,7 +62,8 @@
   ],
   "changelog": {
     "versions": [
-      "v1.0.json"
+      "v1.0.json",
+      "v1.1.json"
     ]
   }
 }
