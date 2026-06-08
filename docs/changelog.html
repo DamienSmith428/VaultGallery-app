@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Changelog — VaultGallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Oxanium:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #03040a;
+  --surface: #080d18;
+  --border: #0f1e35;
+  --cyan: #00ffe0;
+  --magenta: #ff00c8;
+  --yellow: #ffe600;
+  --green: #00ff88;
+  --text: #d4e8ff;
+  --muted: #3a5070;
+  --card: #060e1c;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
+body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px); pointer-events: none; z-index: 9999; }
+body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(0,255,224,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,224,0.03) 1px, transparent 1px); background-size: 48px 48px; pointer-events: none; z-index: 0; }
+
+.orb { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: 0; }
+.orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(255,230,0,0.06), transparent 70%); top: -150px; right: -100px; }
+.orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(0,255,224,0.07), transparent 70%); bottom: 0; left: -100px; }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; display: flex; align-items: center; justify-content: space-between; padding: 16px 48px; background: rgba(3,4,10,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,255,224,0.1); }
+nav::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--cyan), var(--magenta), transparent); opacity: 0.6; }
+.nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 3px; color: var(--cyan); text-decoration: none; text-shadow: 0 0 20px rgba(0,255,224,0.6); }
+.nav-logo span { color: var(--text); text-shadow: none; }
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a { color: var(--muted); text-decoration: none; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; transition: color 0.2s, text-shadow 0.2s; }
+.nav-links a:hover { color: var(--cyan); text-shadow: 0 0 12px rgba(0,255,224,0.6); }
+
+.page-wrap { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 140px 24px 100px; }
+
+.page-label { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--yellow); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; text-shadow: 0 0 12px rgba(255,230,0,0.5); }
+.page-label::before { content: ''; width: 32px; height: 1px; background: var(--yellow); box-shadow: 0 0 8px var(--yellow); }
+.page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px,9vw,96px); letter-spacing: 4px; line-height: 0.9; margin-bottom: 80px; color: var(--text); }
+
+.timeline { display: flex; flex-direction: column; gap: 0; position: relative; }
+.timeline::before { content: ''; position: absolute; left: 120px; top: 0; bottom: 0; width: 1px; background: linear-gradient(var(--cyan), var(--border) 80%); opacity: 0.3; }
+
+.release { display: grid; grid-template-columns: 120px 1fr; gap: 0; padding-bottom: 72px; position: relative; opacity: 0; transform: translateX(-20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.release.visible { opacity: 1; transform: translateX(0); }
+
+.release-dot { position: absolute; left: 112px; top: 6px; width: 18px; height: 18px; border-radius: 50%; background: var(--bg); border: 2px solid var(--cyan); box-shadow: 0 0 12px rgba(0,255,224,0.6), 0 0 30px rgba(0,255,224,0.2); z-index: 2; }
+.release-dot::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); animation: dotPulse 2s ease-in-out infinite; }
+@keyframes dotPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.7); opacity: 0.5; } }
+.release-dot.old { border-color: var(--muted); box-shadow: none; }
+.release-dot.old::after { background: var(--muted); animation: none; box-shadow: none; }
+
+.release-meta { text-align: right; padding-right: 36px; }
+.release-version { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--cyan); text-shadow: 0 0 16px rgba(0,255,224,0.4); margin-bottom: 6px; }
+.release-date { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; }
+
+.release-body { padding-left: 48px; }
+
+.release-tag { display: inline-block; font-family: 'Oxanium', sans-serif; font-size: 9px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 4px 12px; border-radius: 2px; margin-bottom: 24px; }
+.tag-initial { background: rgba(0,255,224,0.08); color: var(--cyan); border: 1px solid rgba(0,255,224,0.25); text-shadow: 0 0 8px rgba(0,255,224,0.4); }
+.tag-feature { background: rgba(255,0,200,0.08); color: var(--magenta); border: 1px solid rgba(255,0,200,0.25); text-shadow: 0 0 8px rgba(255,0,200,0.4); }
+.tag-patch  { background: rgba(255,230,0,0.08); color: var(--yellow); border: 1px solid rgba(255,230,0,0.25); text-shadow: 0 0 8px rgba(255,230,0,0.4); }
+.tag-major  { background: rgba(255,107,0,0.08); color: #ff6b00; border: 1px solid rgba(255,107,0,0.25); text-shadow: 0 0 8px rgba(255,107,0,0.4); }
+
+.change-group { margin-bottom: 24px; }
+.change-group-label { font-family: 'Oxanium', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+.change-group-label.added { color: var(--green); text-shadow: 0 0 12px rgba(0,255,136,0.4); }
+.change-group-label.added::before { content: '+'; font-size: 18px; font-weight: 700; color: var(--green); line-height: 1; text-shadow: 0 0 12px rgba(0,255,136,0.6); }
+.change-group-label.fixed { color: var(--yellow); text-shadow: 0 0 12px rgba(255,230,0,0.4); }
+.change-group-label.fixed::before { content: '~'; font-size: 18px; font-weight: 700; line-height: 1; }
+.change-group-label.removed { color: #ff4d4d; }
+.change-group-label.removed::before { content: '−'; font-size: 18px; font-weight: 700; line-height: 1; }
+
+.change-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.change-list li { font-size: 12px; color: var(--muted); line-height: 1.8; padding-left: 20px; position: relative; transition: color 0.2s; }
+.change-list li:hover { color: var(--text); }
+.change-list li::before { content: '›'; position: absolute; left: 0; color: var(--border); font-size: 14px; line-height: 1.5; }
+
+.release-link { display: inline-flex; align-items: center; gap: 10px; font-size: 11px; color: var(--cyan); text-decoration: none; margin-top: 20px; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 0 12px rgba(0,255,224,0.4); transition: gap 0.3s, text-shadow 0.3s; }
+.release-link:hover { gap: 16px; text-shadow: 0 0 20px rgba(0,255,224,0.7); }
+
+.loading-msg { font-size: 12px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; padding: 40px 0; }
+
+footer { border-top: 1px solid var(--border); padding: 40px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; position: relative; z-index: 1; background: var(--surface); }
+footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--magenta), var(--cyan), transparent); opacity: 0.5; }
+.footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 3px; color: var(--cyan); text-shadow: 0 0 20px rgba(0,255,224,0.4); }
+footer p { font-size: 11px; color: var(--muted); }
+footer a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+footer a:hover { color: var(--cyan); }
+.footer-links { display: flex; gap: 28px; }
+.footer-links a { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+/* ── RESPONSIVE ── */
+
+/* Tablet landscape (≤1024px) */
+@media (max-width: 1024px) {
+  nav { padding: 14px 28px; }
+  .page-wrap { padding: 120px 28px 80px; }
+  footer { padding: 32px 28px; }
+}
+
+/* Tablet portrait (≤768px) */
+@media (max-width: 768px) {
+  nav { padding: 14px 20px; }
+  .nav-links { gap: 18px; }
+  .nav-links a { font-size: 10px; letter-spacing: 1px; }
+  .nav-links li:nth-child(3),
+  .nav-links li:nth-child(4) { display: none; }
+  .page-wrap { padding: 110px 20px 72px; }
+  /* Shrink timeline gutter */
+  .timeline::before { left: 90px; }
+  .release { grid-template-columns: 90px 1fr; }
+  .release-dot { left: 82px; }
+  .release-meta { padding-right: 24px; }
+  .release-body { padding-left: 32px; }
+  footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .footer-links { flex-wrap: wrap; gap: 20px; }
+}
+
+/* Mobile (≤480px) */
+@media (max-width: 480px) {
+  nav { padding: 12px 16px; }
+  .nav-links { display: none; }
+  .page-wrap { padding: 88px 16px 56px; }
+
+  .page-title { letter-spacing: 2px; margin-bottom: 48px; }
+
+  /* Collapse timeline — hide the vertical line and dot, stack meta above body */
+  .timeline::before { display: none; }
+  .release {
+    grid-template-columns: 1fr;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--border);
+  }
+  .release:last-child { border-bottom: none; }
+  .release-dot { display: none; }
+  .release-meta {
+    text-align: left;
+    padding-right: 0;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .release-version { font-size: 20px; margin-bottom: 0; }
+  .release-body { padding-left: 0; }
+  .release-tag { margin-bottom: 20px; }
+
+  .change-group { margin-bottom: 20px; }
+  .change-group-label { font-size: 9px; letter-spacing: 2px; }
+  .change-list li { font-size: 11px; }
+
+  .release-link { font-size: 10px; }
+
+  footer { padding: 20px 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .footer-links { flex-wrap: wrap; gap: 14px; }
+  .footer-links a { font-size: 10px; letter-spacing: 1px; }
+  footer p { font-size: 10px; }
+}
+
+/* Very small phones (≤360px) */
+@media (max-width: 360px) {
+  .release-version { font-size: 18px; }
+  .change-list li { font-size: 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">VaultG<span>allery</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html#features">Features</a></li>
+    <li><a href="index.html#download">Download</a></li>
+    <li><a href="changelog.html">Changelog</a></li>
+    <li><a href="privacy.html">Privacy</a></li>
+    <li><a href="#" id="nav-github" target="_blank">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrap">
+  <p class="page-label">Release History</p>
+  <h1 class="page-title">Change<br>log.</h1>
+  <div class="timeline" id="timeline">
+    <p class="loading-msg">Loading changelogs...</p>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-logo">VaultGallery</span>
+  <p>Built by <a href="#" id="footer-github-user" target="_blank">DamienSmith428</a>. Open source under MIT.</p>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="changelog.html">Changelog</a>
+    <a href="#" id="footer-github-link" target="_blank">GitHub</a>
+  </div>
+</footer>
+
+<script>
+// ── HOW TO ADD A NEW CHANGELOG ──
+// 1. Duplicate changelog/_template.json → changelog/v1.1.json (or whatever the version is)
+// 2. Fill in version, date, tag, tagStyle, githubReleaseUrl, and changes
+// 3. Add the filename to changelog.versions in config.json (newest first)
+// That's it — the page will automatically render it.
+
+function buildReleaseHTML(data, index) {
+  const isNewest = index === 0;
+  const dotClass = isNewest ? 'release-dot' : 'release-dot old';
+
+  const changesHTML = data.changes.map(group => {
+    const items = group.items.map(item => `<li>${item}</li>`).join('');
+    const label = group.type.charAt(0).toUpperCase() + group.type.slice(1);
+    return `
+      <div class="change-group">
+        <div class="change-group-label ${group.type}">${label}</div>
+        <ul class="change-list">${items}</ul>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="release">
+      <div class="${dotClass}"></div>
+      <div class="release-meta">
+        <div class="release-version">v${data.version}</div>
+        <div class="release-date">${data.date}</div>
+      </div>
+      <div class="release-body">
+        <span class="release-tag tag-${data.tagStyle}">${data.tag}</span>
+        ${changesHTML}
+        <a href="${data.githubReleaseUrl}" class="release-link" target="_blank">View release on GitHub →</a>
+      </div>
+    </div>`;
+}
+
+async function loadChangelogs() {
+  const cfg = await fetch('config.json').then(r => r.json());
+  document.getElementById('nav-github').href = cfg.github.baseUrl;
+  document.getElementById('footer-github-user').href = `https://github.com/${cfg.github.repo.split('/')[0]}`;
+  document.getElementById('footer-github-link').href = cfg.github.baseUrl;
+
+  const VERSIONS = cfg.changelog?.versions ?? [];
+
+  const timeline = document.getElementById('timeline');
+  const results = await Promise.all(
+    VERSIONS.map(f => fetch(`changelog/${f}`).then(r => r.json()).catch(() => null))
+  );
+
+  const valid = results.filter(Boolean);
+  if (valid.length === 0) {
+    timeline.innerHTML = '<p class="loading-msg">No changelogs found.</p>';
+    return;
+  }
+
+  timeline.innerHTML = valid.map((data, i) => buildReleaseHTML(data, i)).join('');
+
+  // Scroll reveal
+  const releases = timeline.querySelectorAll('.release');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 120);
+    });
+  }, { threshold: 0.1 });
+  releases.forEach(r => obs.observe(r));
+}
+
+loadChangelogs();
+</script>
+</body>
+</html>
