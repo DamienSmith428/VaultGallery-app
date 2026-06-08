@@ -29,6 +29,7 @@ class AppSettingsDataStore @Inject constructor(
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val ONBOARDING_COMPLETE = booleanPreferencesKey("onboarding_complete")
         val VAULT_SIZE_LIMIT = intPreferencesKey("vault_size_limit")
+        val DELETE_ORIGINAL_AFTER_IMPORT = booleanPreferencesKey("delete_original_after_import")
     }
 
     val settings: Flow<AppSettings> = context.dataStore.data.map { prefs ->
@@ -39,7 +40,8 @@ class AppSettingsDataStore @Inject constructor(
             dynamicColor = prefs[Keys.DYNAMIC_COLOR] ?: true,
             themeMode = prefs[Keys.THEME_MODE]?.let { ThemeMode.valueOf(it) } ?: ThemeMode.SYSTEM,
             hasCompletedOnboarding = prefs[Keys.ONBOARDING_COMPLETE] ?: false,
-            vaultSizeLimitGb = prefs[Keys.VAULT_SIZE_LIMIT] ?: 5
+            vaultSizeLimitGb = prefs[Keys.VAULT_SIZE_LIMIT] ?: 5,
+            deleteOriginalAfterImport = prefs[Keys.DELETE_ORIGINAL_AFTER_IMPORT] ?: false
         )
     }
 
@@ -52,6 +54,7 @@ class AppSettingsDataStore @Inject constructor(
             prefs[Keys.THEME_MODE] = settings.themeMode.name
             prefs[Keys.ONBOARDING_COMPLETE] = settings.hasCompletedOnboarding
             prefs[Keys.VAULT_SIZE_LIMIT] = settings.vaultSizeLimitGb
+            prefs[Keys.DELETE_ORIGINAL_AFTER_IMPORT] = settings.deleteOriginalAfterImport
         }
     }
 

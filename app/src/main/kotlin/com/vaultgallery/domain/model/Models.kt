@@ -56,5 +56,6 @@ data class AppSettings(
     val dynamicColor: Boolean = true,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val hasCompletedOnboarding: Boolean = false,
-    val vaultSizeLimitGb: Int = 5
+    val vaultSizeLimitGb: Int = 5,
+    val deleteOriginalAfterImport: Boolean = false
 )

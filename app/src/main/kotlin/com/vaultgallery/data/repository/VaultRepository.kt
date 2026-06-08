@@ -13,6 +13,7 @@ import com.vaultgallery.domain.model.RecycleAutoDelete
 import com.vaultgallery.domain.model.VaultAlbum
 import com.vaultgallery.domain.model.VaultMedia
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import org.json.JSONArray
 import javax.inject.Inject
@@ -44,9 +45,10 @@ class VaultRepository @Inject constructor(
         mediaDao.getMediaById(id)?.toDomain()
 
     suspend fun importMedia(uris: List<Uri>, albumId: String?): List<ImportResult> {
+        val deleteOriginal = settings.first().deleteOriginalAfterImport
         val results = mutableListOf<ImportResult>()
         for (uri in uris) {
-            val result = importer.importFromUri(uri, albumId)
+            val result = importer.importFromUri(uri, albumId, deleteOriginal)
             if (result is ImportResult.Success) {
                 mediaDao.insert(result.media.toEntity())
             } else if (result is ImportResult.PartialSuccess) {

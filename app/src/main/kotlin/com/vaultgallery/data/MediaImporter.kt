@@ -42,7 +42,8 @@ class MediaImporter @Inject constructor(
 
     suspend fun importFromUri(
         uri: Uri,
-        albumId: String?
+        albumId: String?,
+        deleteOriginal: Boolean
     ): ImportResult = withContext(Dispatchers.IO) {
         try {
             val cr = context.contentResolver
@@ -93,10 +94,10 @@ class MediaImporter @Inject constructor(
                 duration = duration
             )
 
-            // Attempt to delete original
-            val deleted = tryDeleteOriginal(cr, uri)
+            // Attempt to delete original if requested
+            val deleted = if (deleteOriginal) tryDeleteOriginal(cr, uri) else false
 
-            if (deleted) {
+            if (!deleteOriginal || deleted) {
                 ImportResult.Success(media)
             } else {
                 ImportResult.PartialSuccess(media, false)

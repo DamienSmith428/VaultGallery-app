@@ -89,6 +89,12 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun setDeleteOriginalAfterImport(enabled: Boolean) {
+        viewModelScope.launch {
+            repository.updateSettings(_state.value.settings.copy(deleteOriginalAfterImport = enabled))
+        }
+    }
+
     fun openChangePinDialog() = _state.update { it.copy(showChangePinDialog = true, newPin = "", confirmPin = "", pinError = null) }
     fun dismissChangePinDialog() = _state.update { it.copy(showChangePinDialog = false) }
     fun openAboutDialog() = _state.update { it.copy(showAboutDialog = true) }
@@ -258,6 +264,16 @@ fun SettingsScreen(
 
             SettingsSectionHeader("Vault")
 
+            SettingsCard {
+                ToggleRow(
+                    icon = Icons.Default.DeleteSweep,
+                    title = "Delete Original After Import",
+                    subtitle = "Automatically remove media from device gallery after adding to vault",
+                    checked = state.settings.deleteOriginalAfterImport,
+                    onCheckedChange = viewModel::setDeleteOriginalAfterImport
+                )
+            }
+
             SettingsItem(
                 icon = Icons.Default.Lock,
                 title = "Lock Vault Now",
@@ -276,7 +292,7 @@ fun SettingsScreen(
             Spacer(Modifier.height(32.dp))
 
             Text(
-                "Vault Gallery v1.0.0\nSecure AES-256 Encrypted Storage",
+                "Vault Gallery v1.1\nSecure AES-256 Encrypted Storage",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
