@@ -1,0 +1,67 @@
+{
+  "app": {
+    "name": "VaultGallery",
+    "tagline": "VaultGallery",
+    "description": "Vault Gallery is the most secure way to store your private photos and videos on Android. Every file is encrypted with AES-256 — the same standard used by banks and governments — and your encryption key never leaves your device's secure hardware. Import media directly from your camera roll, organize into albums, and browse your collection with a sleek modern gallery interface. Protected by PIN and biometric authentication, your vault locks automatically when you leave the app. Nobody sees what's inside except you.\nFeatures:\n\nMilitary-grade AES-256-GCM encryption\nFingerprint and face unlock support\nCompletely hidden from your system gallery\nAlbum organization with full search\nRecycle bin with auto-delete options\nFavorites collection\nConfigurable auto-lock and storage quota\nNo ads. No cloud. No compromise.",
+    "latestVersion": "1.0",
+    "eyebrow": "Security",
+    "icon": "https://raw.githubusercontent.com/DamienSmith428/VaultGallery-app/master/app/src/main/res/drawable/app_icon_main.png"
+  },
+  "github": {
+    "repo": "DamienSmith428/VaultGallery-app",
+    "baseUrl": "https://github.com/DamienSmith428/VaultGallery-app"
+  },
+  "stats": [
+    {
+      "value": "1",
+      "label": "APK Build"
+    },
+    {
+      "value": "0",
+      "label": "Data Collected"
+    },
+    {
+      "value": "4",
+      "label": "Core Features"
+    },
+    {
+      "value": "MIT",
+      "label": "License"
+    }
+  ],
+  "features": [
+    {
+      "icon": "🔐",
+      "title": "Military-Grade Encryption",
+      "description": "Every photo and video in your vault is protected with AES-256-GCM encryption — the same standard trusted by banks, governments, and defense agencies worldwide. Your encryption key is generated and stored inside your device's secure hardware and never exposed to anyone, including us."
+    },
+    {
+      "icon": "👆",
+      "title": "Biometric Authentication",
+      "description": "Unlock your vault instantly with your fingerprint or face. Vault Gallery integrates directly with your device's biometric hardware for fast, secure access. Prefer a PIN? That works too. Use both together for maximum security."
+    },
+    {
+      "icon": "🗂️",
+      "title": "Organized Your Way",
+      "description": "Create albums to organize your private collection exactly how you want it. Search by filename, date, or tags. Mark favorites for quick access. Recover mistakes from the recycle bin. Your vault works like a full-featured private gallery, not just a locked folder."
+    },
+    {
+      "icon": "⚡",
+      "title": "Buttery Smooth Gallery",
+      "description": "Browse your encrypted collection without compromise. Encrypted thumbnails load instantly in a smooth scrolling grid. Swipe between photos with fluid transitions. Pinch to zoom. Play videos with full player controls. Security that actually feels good to use."
+    }
+  ],
+  "downloads": [
+    {
+      "arch": "Universal",
+      "description": "Works on all supported Android devices.",
+      "recommended": true,
+      "filename": "VaultGallery-{version}-release.apk"
+    }
+  ],
+  "changelog": {
+    "versions": [
+      "v1.0.json"
+    ]
+  }
+}
