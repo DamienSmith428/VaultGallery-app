@@ -1,0 +1,39 @@
+{
+  "_comment": "TEMPLATE — copy this file, rename it to v[version].json (e.g. v1.1.json), and fill in the fields below.",
+
+  "version": "1.1",
+  "date": "MM/DD/YYYY",
+
+  "_tagOptions": "Use one of: 'Initial Release', 'Bug Fix', 'Feature Update', 'Major Update', 'Security Patch', or any custom label you want.",
+  "tag": "Feature Update",
+
+  "_tagStyleOptions": "Use one of: 'initial' (cyan), 'patch' (yellow), 'feature' (magenta), 'major' (orange).",
+  "tagStyle": "feature",
+
+  "_githubReleaseUrl_note": "Link to the specific GitHub release for this version.",
+  "githubReleaseUrl": "https://github.com/DamienSmith428/LinkVault/releases/tag/v1.1",
+
+  "_changesNote": "Add as many change groups as you need. 'type' must be one of: 'added', 'fixed', 'removed'. Delete any groups you don't need.",
+  "changes": [
+    {
+      "type": "added",
+      "items": [
+        "Describe a new feature here",
+        "Another new feature"
+      ]
+    },
+    {
+      "type": "fixed",
+      "items": [
+        "Describe a bug fix here",
+        "Another bug fix"
+      ]
+    },
+    {
+      "type": "removed",
+      "items": [
+        "Something that was removed"
+      ]
+    }
+  ]
+}
