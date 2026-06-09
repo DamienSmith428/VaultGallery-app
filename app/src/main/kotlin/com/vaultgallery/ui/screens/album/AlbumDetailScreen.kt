@@ -1,7 +1,10 @@
 package com.vaultgallery.ui.screens.album
 
 import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -48,7 +51,8 @@ data class AlbumDetailState(
     val importMessage: String? = null,
     val selectedIds: Set<String> = emptySet(),
     val isSelectionMode: Boolean = false,
-    val mediaToMove: VaultMedia? = null
+    val mediaToMove: VaultMedia? = null,
+    val urisToDelete: List<Uri> = emptyList()
 )
 
 @HiltViewModel
@@ -83,9 +87,19 @@ class AlbumDetailViewModel @Inject constructor(
             _state.update { it.copy(isImporting = true) }
             val results = repository.importMedia(uris, albumId)
             val ok = results.count { it is ImportResult.Success || it is ImportResult.PartialSuccess }
-            _state.update { it.copy(isImporting = false, importMessage = "$ok item(s) imported") }
+            
+            val urisToDelete = results.filterIsInstance<ImportResult.PartialSuccess>()
+                .mapNotNull { it.uri }
+
+            _state.update { it.copy(
+                isImporting = false, 
+                importMessage = "$ok item(s) imported",
+                urisToDelete = urisToDelete
+            ) }
         }
     }
+
+    fun clearUrisToDelete() = _state.update { it.copy(urisToDelete = emptyList()) }
 
     fun clearMessage() = _state.update { it.copy(importMessage = null) }
 
@@ -156,6 +170,28 @@ fun AlbumDetailScreen(
         if (uris.isNotEmpty()) viewModel.importMedia(uris)
     }
 
+    val deleteLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult()
+    ) { _ ->
+        viewModel.clearUrisToDelete()
+    }
+
+    val context = androidx.compose.ui.platform.LocalContext.current
+    LaunchedEffect(state.urisToDelete) {
+        if (state.urisToDelete.isNotEmpty() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                val pendingIntent = MediaStore.createDeleteRequest(
+                    context.contentResolver,
+                    state.urisToDelete
+                )
+                deleteLauncher.launch(IntentSenderRequest.Builder(pendingIntent.intentSender).build())
+            } catch (e: Exception) {
+                android.util.Log.e("AlbumDetail", "Failed to create delete request", e)
+                viewModel.clearUrisToDelete()
+            }
+        }
+    }
+
     LaunchedEffect(state.importMessage) {
         state.importMessage?.let {
             snackbarHostState.showSnackbar(it)
@@ -170,7 +206,7 @@ fun AlbumDetailScreen(
                 title = { Text(if (state.isSelectionMode) "${state.selectedIds.size} selected" else state.albumName, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = if (state.isSelectionMode) viewModel::clearSelection else onBack) {
-                        Icon(if (state.isSelectionMode) Icons.Default.Close else Icons.Default.ArrowBack, contentDescription = null)
+                        Icon(if (state.isSelectionMode) Icons.Default.Close else Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
                 },
                 actions = {

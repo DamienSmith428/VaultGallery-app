@@ -2,7 +2,9 @@ package com.vaultgallery.ui.screens.home
 
 import android.Manifest
 import android.os.Build
+import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -66,6 +68,28 @@ fun HomeScreen(
         contract = ActivityResultContracts.GetMultipleContents()
     ) { uris ->
         if (uris.isNotEmpty()) viewModel.importMedia(uris)
+    }
+
+    val deleteLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult()
+    ) { _ ->
+        viewModel.clearUrisToDelete()
+    }
+
+    val context = androidx.compose.ui.platform.LocalContext.current
+    LaunchedEffect(state.urisToDelete) {
+        if (state.urisToDelete.isNotEmpty() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                val pendingIntent = MediaStore.createDeleteRequest(
+                    context.contentResolver,
+                    state.urisToDelete
+                )
+                deleteLauncher.launch(IntentSenderRequest.Builder(pendingIntent.intentSender).build())
+            } catch (e: Exception) {
+                android.util.Log.e("HomeScreen", "Failed to create delete request", e)
+                viewModel.clearUrisToDelete()
+            }
+        }
     }
 
     // Show import message snackbar

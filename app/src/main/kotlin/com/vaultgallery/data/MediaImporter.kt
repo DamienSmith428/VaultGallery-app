@@ -9,6 +9,7 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import com.vaultgallery.data.security.VaultCrypto
 import com.vaultgallery.domain.model.MediaType
 import com.vaultgallery.domain.model.VaultMedia
@@ -23,7 +24,7 @@ import javax.inject.Singleton
 
 sealed class ImportResult {
     data class Success(val media: VaultMedia) : ImportResult()
-    data class PartialSuccess(val media: VaultMedia, val originalDeleted: Boolean) : ImportResult()
+    data class PartialSuccess(val media: VaultMedia, val originalDeleted: Boolean, val uri: Uri? = null) : ImportResult()
     data class Failure(val uri: Uri, val reason: String) : ImportResult()
 }
 
@@ -40,6 +41,22 @@ class MediaImporter @Inject constructor(
         File(context.filesDir, "thumbs").also { it.mkdirs() }
     }
 
+    private fun resolveMediaUri(cr: ContentResolver, uri: Uri): Uri? {
+        if (uri.authority == "com.android.providers.media.documents") {
+            val docId = android.provider.DocumentsContract.getDocumentId(uri)
+            val split = docId.split(":")
+            val type = split[0]
+            val id = split[1]
+            val baseUri = when (type) {
+                "image" -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                "video" -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                else -> return uri
+            }
+            return android.content.ContentUris.withAppendedId(baseUri, id.toLong())
+        }
+        return uri
+    }
+
     suspend fun importFromUri(
         uri: Uri,
         albumId: String?,
@@ -47,29 +64,31 @@ class MediaImporter @Inject constructor(
     ): ImportResult = withContext(Dispatchers.IO) {
         try {
             val cr = context.contentResolver
-            val mimeType = cr.getType(uri) ?: "application/octet-stream"
+            val mediaUri = resolveMediaUri(cr, uri) ?: uri
+            
+            val mimeType = cr.getType(mediaUri) ?: "application/octet-stream"
             val mediaType = when {
                 mimeType.startsWith("image/") -> MediaType.IMAGE
                 mimeType.startsWith("video/") -> MediaType.VIDEO
-                else -> return@withContext ImportResult.Failure(uri, "Unsupported media type: $mimeType")
+                else -> return@withContext ImportResult.Failure(mediaUri, "Unsupported media type: $mimeType")
             }
 
-            val originalName = resolveDisplayName(cr, uri) ?: "${UUID.randomUUID()}"
-            val fileSize = resolveFileSize(cr, uri)
+            val originalName = resolveDisplayName(cr, mediaUri) ?: "${UUID.randomUUID()}"
+            val fileSize = resolveFileSize(cr, mediaUri)
             val encId = UUID.randomUUID().toString()
             val encFileName = "$encId.enc"
             val encFile = File(vaultDir, encFileName)
 
             // Encrypt directly from URI input stream
-            cr.openInputStream(uri)?.use { inputStream ->
+            cr.openInputStream(mediaUri)?.use { inputStream ->
                 encFile.outputStream().use { outputStream ->
                     crypto.encrypt(inputStream, outputStream)
                 }
-            } ?: return@withContext ImportResult.Failure(uri, "Cannot open input stream")
+            } ?: return@withContext ImportResult.Failure(mediaUri, "Cannot open input stream")
 
             // Metadata & Thumbnail
-            val (width, height, duration) = resolveMediaMetadata(uri, mediaType)
-            val thumbBitmap = generateThumbnail(uri, mediaType)
+            val (width, height, duration) = resolveMediaMetadata(mediaUri, mediaType)
+            val thumbBitmap = generateThumbnail(mediaUri, mediaType)
             val thumbFileName = if (thumbBitmap != null) {
                 val tName = "${encId}_thumb.enc"
                 val tFile = File(thumbDir, tName)
@@ -95,12 +114,12 @@ class MediaImporter @Inject constructor(
             )
 
             // Attempt to delete original if requested
-            val deleted = if (deleteOriginal) tryDeleteOriginal(cr, uri) else false
+            val deleted = if (deleteOriginal) tryDeleteOriginal(cr, mediaUri) else false
 
             if (!deleteOriginal || deleted) {
                 ImportResult.Success(media)
             } else {
-                ImportResult.PartialSuccess(media, false)
+                ImportResult.PartialSuccess(media, false, mediaUri)
             }
         } catch (e: Exception) {
             ImportResult.Failure(uri, e.message ?: "Unknown error")
@@ -193,12 +212,12 @@ class MediaImporter @Inject constructor(
 
     private fun tryDeleteOriginal(cr: ContentResolver, uri: Uri): Boolean {
         return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                // On Android 11+ we need MANAGE_MEDIA or user confirmation
-                // Try direct delete; will throw RecoverableSecurityException if not allowed
-                cr.delete(uri, null, null) > 0
+            if (cr.delete(uri, null, null) > 0) {
+                true
             } else {
-                cr.delete(uri, null, null) > 0
+                // If delete returns 0, it might be because the URI isn't a direct MediaStore row
+                // but a virtual or different provider URI.
+                false
             }
         } catch (_: SecurityException) {
             false

@@ -27,7 +27,8 @@ data class HomeState(
     val totalCount: Int = 0,
     val totalSize: Long = 0L,
     val vaultSizeLimitGb: Int = 5,
-    val showSizeLimitDialog: Boolean = false
+    val showSizeLimitDialog: Boolean = false,
+    val urisToDelete: List<Uri> = emptyList()
 )
 
 @HiltViewModel
@@ -69,16 +70,23 @@ class HomeViewModel @Inject constructor(
             val results = repository.importMedia(uris, albumId)
             val succeeded = results.count { it is ImportResult.Success || it is ImportResult.PartialSuccess }
             val failed = results.count { it is ImportResult.Failure }
-            val partialCount = results.count { it is ImportResult.PartialSuccess }
+            
+            val urisToDelete = results.filterIsInstance<ImportResult.PartialSuccess>()
+                .mapNotNull { it.uri }
 
             val msg = buildString {
                 append("$succeeded item(s) imported")
-                if (partialCount > 0) append(" ($partialCount not removed from gallery — manual deletion required)")
                 if (failed > 0) append(", $failed failed")
             }
-            _state.update { it.copy(isImporting = false, importMessage = msg) }
+            _state.update { it.copy(
+                isImporting = false, 
+                importMessage = msg,
+                urisToDelete = urisToDelete
+            ) }
         }
     }
+
+    fun clearUrisToDelete() = _state.update { it.copy(urisToDelete = emptyList()) }
 
     fun clearImportMessage() = _state.update { it.copy(importMessage = null) }
 
